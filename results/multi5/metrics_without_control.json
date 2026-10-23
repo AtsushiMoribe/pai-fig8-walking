@@ -1,0 +1,44 @@
+{
+  "num_robots": 5,
+  "half_width_m": 3.05,
+  "lap_length_m": 15.99,
+  "cruise_speed_mps": 0.5,
+  "target_gap_m": 2.0,
+  "plan_notes": [
+    "planner disabled"
+  ],
+  "time_s": 34.98,
+  "laps_last_robot": 0.32,
+  "min_distance_between_robots_m": 0.159,
+  "gap_error_rms_m": 0.791,
+  "cross_track_error_rms_m": [
+    0.962,
+    0.016,
+    0.024,
+    0.056,
+    0.063
+  ],
+  "fallen": [
+    true,
+    false,
+    false,
+    false,
+    false
+  ],
+  "crossing_yield": false,
+  "stops_per_robot": [
+    0,
+    1,
+    1,
+    1,
+    0
+  ],
+  "stopped_time_s": [
+    0.0,
+    25.42,
+    23.46,
+    21.48,
+    0.0
+  ],
+  "min_distance_near_crossing_m": 0.159
+}
