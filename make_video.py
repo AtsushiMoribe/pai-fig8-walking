@@ -13,13 +13,31 @@ from PIL import Image, ImageDraw, ImageFont
 
 W, H = 1920, 540
 
+# Pillow's default font has no Japanese glyphs (they become boxes), so use a CJK font when one is installed.
+# On Colab: !apt-get -qq install -y fonts-noto-cjk
+CJK_FONTS = [
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
+    "/usr/share/fonts/opentype/ipafont-gothic/ipagp.ttf",
+    "/usr/share/fonts/truetype/fonts-japanese-gothic.ttf",
+]
+FONT_PATH = next((p for p in CJK_FONTS if os.path.exists(p)), None)
+
+
+def load_font(size):
+    if FONT_PATH:
+        return ImageFont.truetype(FONT_PATH, size)
+    return ImageFont.load_default(size=size)
+
 
 def card(path, lines, size=(W, H)):
     img = Image.new("RGB", size, (16, 24, 40))
     draw = ImageDraw.Draw(img)
     y = (size[1] - sum(int(font_size * 1.6) for _, font_size in lines)) / 2
     for text, font_size in lines:
-        font = ImageFont.load_default(size=font_size)
+        if not FONT_PATH and not text.isascii():
+            print("WARNING: no CJK font found, non-ASCII text will show as boxes (apt-get install fonts-noto-cjk)")
+        font = load_font(font_size)
         w = draw.textlength(text, font=font)
         draw.text(((size[0] - w) / 2, y), text, fill=(240, 240, 240), font=font)
         y += int(font_size * 1.6)
