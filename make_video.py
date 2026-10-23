@@ -36,6 +36,10 @@ def main():
     parser.add_argument("--out-dir", type=str, default="outputs")
     parser.add_argument("--speed", type=float, default=1.0, help="Playback speed of the main part (1 or 2)")
     parser.add_argument("--title", type=str, default="Figure-eight walking of a quadruped robot (Go2)")
+    parser.add_argument("--subtitle", type=str, default="Genesis simulator / RL locomotion policy (PPO) + pure-pursuit path following")
+    parser.add_argument("--legend", type=str, default="left: overview camera   right: follow camera   orange: reference path   blue: robot trail")
+    parser.add_argument("--result-image", type=str, default="fig8_result.png")
+    parser.add_argument("--output", type=str, default="fig8_submission.mp4")
     args = parser.parse_args()
     o = lambda name: os.path.join(args.out_dir, name)  # noqa: E731
 
@@ -44,8 +48,8 @@ def main():
         o("title.png"),
         [
             (args.title, 64),
-            ("Genesis simulator / RL locomotion policy (PPO) + pure-pursuit path following", 36),
-            ("left: overview camera   right: follow camera   orange: reference path   blue: robot trail", 30),
+            (args.subtitle, 36),
+            (args.legend, 30),
             (speed_text, 44),
         ],
     )
@@ -59,8 +63,8 @@ def main():
          "-map", "[v]", "-pix_fmt", "yuv420p", "-c:v", "libx264", o("part_main.mp4")])
     parts = [o("part_title.mp4"), o("part_main.mp4")]
     # 5 s result plot
-    if os.path.exists(o("fig8_result.png")):
-        run(["ffmpeg", "-y", "-v", "error", "-loop", "1", "-i", o("fig8_result.png"), "-t", "5", "-r", "25",
+    if os.path.exists(o(args.result_image)):
+        run(["ffmpeg", "-y", "-v", "error", "-loop", "1", "-i", o(args.result_image), "-t", "5", "-r", "25",
              "-vf", f"scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:white",
              "-pix_fmt", "yuv420p", "-c:v", "libx264", o("part_result.mp4")])
         parts.append(o("part_result.mp4"))
@@ -68,10 +72,10 @@ def main():
     with open(o("parts.txt"), "w") as f:
         f.writelines(f"file '{os.path.abspath(p)}'\n" for p in parts)
     run(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", o("parts.txt"), "-c", "copy",
-         o("fig8_submission.mp4")])
+         o(args.output)])
     out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
-                          o("fig8_submission.mp4")], capture_output=True, text=True).stdout.strip()
-    print(f"saved {o('fig8_submission.mp4')} ({float(out):.1f} s; the assignment requires 60-180 s)")
+                          o(args.output)], capture_output=True, text=True).stdout.strip()
+    print(f"saved {o(args.output)} ({float(out):.1f} s; the assignment requires 60-180 s)")
 
 
 if __name__ == "__main__":

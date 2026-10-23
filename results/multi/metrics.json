@@ -1,0 +1,22 @@
+{
+  "num_robots": 3,
+  "half_width_m": 3.0,
+  "lap_length_m": 15.73,
+  "cruise_speed_mps": 0.6,
+  "target_gap_m": 1.5,
+  "plan_notes": [],
+  "time_s": 75.32,
+  "laps_last_robot": 3.0,
+  "min_distance_between_robots_m": 1.301,
+  "gap_error_rms_m": 0.007,
+  "cross_track_error_rms_m": [
+    0.022,
+    0.022,
+    0.021
+  ],
+  "fallen": [
+    false,
+    false,
+    false
+  ]
+}
