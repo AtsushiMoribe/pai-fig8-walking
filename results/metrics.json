@@ -1,0 +1,10 @@
+{
+  "time_s": 75.32000000000001,
+  "laps": 3.0,
+  "path_length_m": 15.73,
+  "mean_speed_mps": 0.621,
+  "cross_track_error_rms_m": 0.022,
+  "cross_track_error_max_m": 0.052,
+  "yaw_rate_tracking_rmse": 0.058,
+  "falls": 0
+}
