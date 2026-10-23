@@ -40,6 +40,9 @@ def main():
     parser.add_argument("--legend", type=str, default="left: overview camera   right: follow camera   orange: reference path   blue: robot trail")
     parser.add_argument("--result-image", type=str, default="fig8_result.png")
     parser.add_argument("--output", type=str, default="fig8_submission.mp4")
+    parser.add_argument("--before", type=str, default=None, help="Output dir of a comparison run shown first")
+    parser.add_argument("--before-caption", type=str, default="before")
+    parser.add_argument("--main-caption", type=str, default="WITH crossing control: stop, wait, walk again")
     args = parser.parse_args()
     o = lambda name: os.path.join(args.out_dir, name)  # noqa: E731
 
@@ -57,11 +60,27 @@ def main():
     # 3 s title card
     run(["ffmpeg", "-y", "-v", "error", "-loop", "1", "-i", o("title.png"), "-t", "3", "-r", "25",
          "-pix_fmt", "yuv420p", "-c:v", "libx264", o("part_title.mp4")])
-    # side by side main part (+ speed up)
-    run(["ffmpeg", "-y", "-v", "error", "-i", o("overview.mp4"), "-i", o("follow.mp4"), "-filter_complex",
-         f"[0:v]scale=960:540[a];[1:v]scale=960:540[b];[a][b]hstack=inputs=2,setpts=PTS/{args.speed},fps=25[v]",
-         "-map", "[v]", "-pix_fmt", "yuv420p", "-c:v", "libx264", o("part_main.mp4")])
-    parts = [o("part_title.mp4"), o("part_main.mp4")]
+    def side_by_side(src_dir, out):
+        run(["ffmpeg", "-y", "-v", "error", "-i", os.path.join(src_dir, "overview.mp4"), "-i",
+             os.path.join(src_dir, "follow.mp4"), "-filter_complex",
+             f"[0:v]scale=960:540[a];[1:v]scale=960:540[b];[a][b]hstack=inputs=2,setpts=PTS/{args.speed},fps=25[v]",
+             "-map", "[v]", "-pix_fmt", "yuv420p", "-c:v", "libx264", out])
+
+    def caption(text, name):
+        card(o(name + ".png"), [(text, 56)])
+        run(["ffmpeg", "-y", "-v", "error", "-loop", "1", "-i", o(name + ".png"), "-t", "2", "-r", "25",
+             "-pix_fmt", "yuv420p", "-c:v", "libx264", o(name + ".mp4")])
+        return o(name + ".mp4")
+
+    parts = [o("part_title.mp4")]
+    if args.before:
+        # comparison run first (e.g. without the crossing control), then the main run
+        parts.append(caption(args.before_caption, "part_before_caption"))
+        side_by_side(args.before, o("part_before.mp4"))
+        parts.append(o("part_before.mp4"))
+        parts.append(caption(args.main_caption, "part_main_caption"))
+    side_by_side(args.out_dir, o("part_main.mp4"))
+    parts.append(o("part_main.mp4"))
     # 5 s result plot
     if os.path.exists(o(args.result_image)):
         run(["ffmpeg", "-y", "-v", "error", "-loop", "1", "-i", o(args.result_image), "-t", "5", "-r", "25",

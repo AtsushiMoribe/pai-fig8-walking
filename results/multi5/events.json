@@ -1,0 +1,194 @@
+[
+  {
+    "t": 7.36,
+    "robot": 0,
+    "event": "stop",
+    "reason": "yields to robot 4 at the crossing"
+  },
+  {
+    "t": 7.76,
+    "robot": 1,
+    "event": "stop",
+    "reason": "yields to robot 4 at the crossing"
+  },
+  {
+    "t": 9.76,
+    "robot": 2,
+    "event": "stop",
+    "reason": "queues behind robot 1"
+  },
+  {
+    "t": 11.04,
+    "robot": 0,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 11.26,
+    "robot": 1,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 11.56,
+    "robot": 2,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 11.88,
+    "robot": 3,
+    "event": "stop",
+    "reason": "queues behind robot 2"
+  },
+  {
+    "t": 12.38,
+    "robot": 3,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 27.94,
+    "robot": 0,
+    "event": "stop",
+    "reason": "yields to robot 4 at the crossing"
+  },
+  {
+    "t": 28.98,
+    "robot": 1,
+    "event": "stop",
+    "reason": "yields to robot 4 at the crossing"
+  },
+  {
+    "t": 30.88,
+    "robot": 2,
+    "event": "stop",
+    "reason": "queues behind robot 1"
+  },
+  {
+    "t": 32.22,
+    "robot": 0,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 32.38,
+    "robot": 1,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 32.72,
+    "robot": 2,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 32.86,
+    "robot": 3,
+    "event": "stop",
+    "reason": "queues behind robot 2"
+  },
+  {
+    "t": 33.36,
+    "robot": 3,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 49.3,
+    "robot": 0,
+    "event": "stop",
+    "reason": "yields to robot 4 at the crossing"
+  },
+  {
+    "t": 49.88,
+    "robot": 1,
+    "event": "stop",
+    "reason": "yields to robot 4 at the crossing"
+  },
+  {
+    "t": 51.8,
+    "robot": 2,
+    "event": "stop",
+    "reason": "queues behind robot 1"
+  },
+  {
+    "t": 53.12,
+    "robot": 0,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 53.3,
+    "robot": 1,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 53.56,
+    "robot": 2,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 54.0,
+    "robot": 3,
+    "event": "stop",
+    "reason": "queues behind robot 2"
+  },
+  {
+    "t": 54.5,
+    "robot": 3,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 70.44,
+    "robot": 0,
+    "event": "stop",
+    "reason": "yields to robot 4 at the crossing"
+  },
+  {
+    "t": 71.02,
+    "robot": 1,
+    "event": "stop",
+    "reason": "yields to robot 4 at the crossing"
+  },
+  {
+    "t": 72.92,
+    "robot": 2,
+    "event": "stop",
+    "reason": "queues behind robot 1"
+  },
+  {
+    "t": 74.28,
+    "robot": 0,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 74.42,
+    "robot": 1,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 74.7,
+    "robot": 2,
+    "event": "resume",
+    "reason": "no risk any more"
+  },
+  {
+    "t": 74.94,
+    "robot": 3,
+    "event": "stop",
+    "reason": "queues behind robot 2"
+  },
+  {
+    "t": 75.44,
+    "robot": 3,
+    "event": "resume",
+    "reason": "no risk any more"
+  }
+]

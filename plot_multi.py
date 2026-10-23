@@ -37,7 +37,10 @@ def main():
     ax.set_aspect("equal")
     ax.set_xlabel("x [m]")
     ax.set_ylabel("y [m]")
-    ax.set_title(f"{n} robots in a line: lap {m['lap_length_m']} m, {m['cruise_speed_mps']} m/s")
+    title = f"{n} robots in a line: lap {m['lap_length_m']} m, {m['cruise_speed_mps']} m/s"
+    if m.get("crossing_yield") and sum(m.get("stops_per_robot", [])):
+        title += f"\n{sum(m['stops_per_robot'])} stops, min distance {m['min_distance_between_robots_m']} m"
+    ax.set_title(title)
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.25), ncol=n + 1, fontsize=8)
     ax.grid(alpha=0.3)
 
@@ -61,7 +64,11 @@ def main():
     ax = fig.add_subplot(3, 2, 6)
     for i in range(n):
         ax.plot(t, d["cmd"][:, i, 0], color=COLORS[i % len(COLORS)], lw=1, label=names[i])
-    ax.set_ylabel("speed\ncommand [m/s]")
+        if "state" in d:
+            # shade the time each robot is stopped (one thin band per robot under the axis)
+            stopped = d["state"][:, i] == 2
+            ax.fill_between(t, -0.04 * (i + 1), -0.04 * i, where=stopped, color=COLORS[i % len(COLORS)], step="mid")
+    ax.set_ylabel("speed\ncommand [m/s]\n(bands: stopped)")
     ax.set_xlabel("time [s]")
     ax.legend(fontsize=7, loc="lower right", ncol=n)
     ax.grid(alpha=0.3)
