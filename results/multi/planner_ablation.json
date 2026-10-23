@@ -1,0 +1,25 @@
+{
+  "setting": "3 robots, gap 3.5 m, speed 0.6 m/s, requested half-width 3.0 m, 1.5 laps",
+  "without_planner": {
+    "half_width_m": 3.0,
+    "lap_length_m": 15.73,
+    "min_distance_between_robots_m": 0.734,
+    "gap_error_rms_m": 0.079,
+    "fallen": [
+      false,
+      false,
+      false
+    ]
+  },
+  "with_planner": {
+    "half_width_m": 3.24,
+    "lap_length_m": 17.0,
+    "min_distance_between_robots_m": 1.032,
+    "gap_error_rms_m": 0.006,
+    "fallen": [
+      false,
+      false,
+      false
+    ]
+  }
+}
