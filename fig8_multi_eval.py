@@ -42,6 +42,7 @@ import genesis as gs
 from genesis.utils.geom import inv_quat, quat_to_xyz, transform_by_quat
 
 from fig8_eval import figure_eight
+from scenery import add_ground, vis_options
 
 LEMNISCATE_LENGTH_PER_A = 5.2441  # lap length of a lemniscate of Bernoulli = 5.2441 * half-width
 TRAIL_COLORS = [
@@ -91,7 +92,7 @@ def plan(num_robots, gap, speed, size, max_yaw_rate, yaw_margin, crossing_cleara
 class Convoy:
     """N Go2 robots in one scene sharing one policy (same observation / action layout as Fig8Env)."""
 
-    def __init__(self, num_robots, env_cfg, obs_cfg, starts, cameras=None):
+    def __init__(self, num_robots, env_cfg, obs_cfg, starts, cameras=None, scenery=True):
         self.num_envs = num_robots  # the policy sees the robots as a batch
         self.num_actions = env_cfg["num_actions"]
         self.cfg = env_cfg
@@ -106,9 +107,13 @@ class Convoy:
             rigid_options=gs.options.RigidOptions(
                 enable_self_collision=False, max_collision_pairs=40 * num_robots, tolerance=1e-5
             ),
+            vis_options=vis_options() if scenery else gs.options.VisOptions(),
             show_viewer=False,
         )
-        self.scene.add_entity(gs.morphs.URDF(file="urdf/plane/plane.urdf", fixed=True))
+        if scenery:
+            add_ground(self.scene)  # soil-textured ground and blue sky, same physics
+        else:
+            self.scene.add_entity(gs.morphs.URDF(file="urdf/plane/plane.urdf", fixed=True))
         self.robots = [
             self.scene.add_entity(gs.morphs.URDF(file="urdf/go2/urdf/go2.urdf", pos=pos, quat=quat))
             for pos, quat in starts
@@ -306,6 +311,7 @@ def main():
     parser.add_argument("--max-time", type=float, default=170.0)
     parser.add_argument("--fps", type=int, default=25)
     parser.add_argument("--res", type=int, nargs=2, default=(960, 540))
+    parser.add_argument("--plain-scene", action="store_true", help="Genesis default checkerboard ground and dark sky")
     parser.add_argument("--no-video", action="store_true")
     parser.add_argument("--cpu", action="store_true")
     args = parser.parse_args()
@@ -346,13 +352,13 @@ def main():
     cameras = []
     if not args.no_video:
         cameras = [
-            dict(res=tuple(args.res), pos=(0.0, -1.3 * a, 1.2 * a), lookat=(0.0, -0.1 * a, 0.0), fov=55, debug=True),
+            dict(res=tuple(args.res), pos=(0.0, -1.6 * a, 0.95 * a), lookat=(0.0, 0.05 * a, 0.3), fov=55, debug=True),
             # with crossing management: a fixed close-up of the crossing. otherwise: follow the middle robot
             dict(res=tuple(args.res), pos=(2.4, -2.4, 1.7), lookat=(0.0, 0.0, 0.2), fov=50, debug=True)
             if not args.no_yield
             else dict(res=tuple(args.res), pos=(a + 2.6, -2.2, 1.5), lookat=(a, 0.0, 0.3), fov=55, debug=True),
         ]
-    env = Convoy(n, env_cfg, obs_cfg, starts, cameras)
+    env = Convoy(n, env_cfg, obs_cfg, starts, cameras, scenery=not args.plain_scene)
     runner = OnPolicyRunner(env, train_cfg, log_dir, device=gs.device)
     runner.load(os.path.join(log_dir, f"model_{args.ckpt}.pt"), map_location=str(gs.device))
     policy = runner.get_inference_policy(device=gs.device)

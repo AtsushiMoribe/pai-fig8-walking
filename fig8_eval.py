@@ -101,6 +101,7 @@ def main():
     parser.add_argument("--max-time", type=float, default=170.0, help="Time limit [s] (video must be <= 3 min)")
     parser.add_argument("--fps", type=int, default=25)
     parser.add_argument("--res", type=int, nargs=2, default=(960, 540))
+    parser.add_argument("--plain-scene", action="store_true", help="Genesis default checkerboard ground and dark sky")
     parser.add_argument("--no-video", action="store_true")
     parser.add_argument("--cpu", action="store_true")
     args = parser.parse_args()
@@ -122,7 +123,7 @@ def main():
         cameras = [
             # overview camera looking at the whole eight
             # (debug=True so that the reference path and trail drawn with draw_debug_* appear in the video)
-            dict(res=tuple(args.res), pos=(0.0, -1.3 * a, 1.2 * a), lookat=(0.0, -0.1 * a, 0.0), fov=55, debug=True),
+            dict(res=tuple(args.res), pos=(0.0, -1.6 * a, 0.95 * a), lookat=(0.0, 0.05 * a, 0.3), fov=55, debug=True),
             # follow camera, moved with the robot
             dict(res=tuple(args.res), pos=(a + 1.8, -1.2, 0.9), lookat=(a, 0.0, 0.3), fov=50, debug=True),
         ]
@@ -134,6 +135,7 @@ def main():
         command_cfg=command_cfg,
         show_viewer=False,
         cameras=cameras,
+        scenery=not args.plain_scene,
     )
 
     runner = OnPolicyRunner(env, train_cfg, log_dir, device=gs.device)
