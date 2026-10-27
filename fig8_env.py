@@ -6,6 +6,8 @@ from tensordict import TensorDict
 import genesis as gs
 from genesis.utils.geom import quat_to_xyz, transform_by_quat, inv_quat, transform_quat_by_quat
 
+from scenery import add_ground, vis_options
+
 
 def gs_rand(lower, upper, batch_shape):
     assert lower.shape == upper.shape
@@ -22,7 +24,7 @@ class Fig8Env:
     - optional cameras for headless video recording (Google Colab)
     """
 
-    def __init__(self, num_envs, env_cfg, obs_cfg, reward_cfg, command_cfg, show_viewer=False, cameras=None):
+    def __init__(self, num_envs, env_cfg, obs_cfg, reward_cfg, command_cfg, show_viewer=False, cameras=None, scenery=False):
         self.num_envs: int = num_envs
         self.num_actions = env_cfg["num_actions"]
         self.cfg = env_cfg
@@ -53,9 +55,7 @@ class Fig8Env:
                 max_collision_pairs=20,
                 tolerance=1e-5,
             ),
-            vis_options=gs.options.VisOptions(
-                rendered_envs_idx=[0],
-            ),
+            vis_options=vis_options(rendered_envs_idx=[0]) if scenery else gs.options.VisOptions(rendered_envs_idx=[0]),
             viewer_options=gs.options.ViewerOptions(
                 camera_pos=(2.0, 0.0, 2.5),
                 camera_lookat=(0.0, 0.0, 0.5),
@@ -65,13 +65,16 @@ class Fig8Env:
         )
         self.external_commands = False  # True: commands are given by set_commands() instead of random sampling
 
-        # add plain
-        self.scene.add_entity(
-            gs.morphs.URDF(
-                file="urdf/plane/plane.urdf",
-                fixed=True,
+        # add plain (scenery=True: soil-textured ground and blue sky for the videos, same physics)
+        if scenery:
+            add_ground(self.scene)
+        else:
+            self.scene.add_entity(
+                gs.morphs.URDF(
+                    file="urdf/plane/plane.urdf",
+                    fixed=True,
+                )
             )
-        )
 
         self.robot = self.scene.add_entity(
             gs.morphs.URDF(

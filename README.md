@@ -26,6 +26,7 @@ Physical AI 2026 応用編1 最終課題。四足ロボット Unitree Go2 に、
 | `fig8_train.py` | PPO による学習（公式 `go2_train.py` を改変） |
 | `fig8_eval.py` | 八の字経路追従の評価、2カメラ録画、軌跡・指標の保存 |
 | `plot_results.py` | 軌跡・速度追従・経路誤差のグラフ |
+| `scenery.py` | 動画用の景観（土の地面テクスチャと青空）。物理は学習時と同じ地面のまま。`--plain-scene` で Genesis 標準の見た目 |
 | `make_video.py` | タイトル＋2画面＋結果グラフの提出用動画を作成 |
 | `fig8_multi_eval.py` | 改良版：3台の隊列八の字歩行（隊列制御＋自動プランナー） |
 | `plot_multi.py` | 改良版の軌跡・車間・速度のグラフ |
